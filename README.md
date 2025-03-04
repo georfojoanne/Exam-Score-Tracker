@@ -1,2 +1,2 @@
 # Exam-Score-Tracker
-C++ activity
+This is a C++ activity. Pang practice chz.
