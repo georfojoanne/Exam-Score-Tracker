@@ -9,25 +9,40 @@ struct Subject {
     bool hasScore = false;
 };
 
+void displayScores(const vector<Subject>& students) {
+    cout << "\nUpdated List of Scores:\n";
+    cout << "------------------------------------------------\n";
+    cout << "| Subject Name        | Score |\n";
+    cout << "------------------------------------------------\n";
+    for (const auto& student : students) {
+        cout << "| " << student.name;
+        cout << string(20 - student.name.length(), ' ') << "| " << student.score << " |\n";
+    }
+    cout << "------------------------------------------------\n";
+}
+
 void addScore(vector<Subject>& students) {
     Subject student;
     cout << "Enter subject name: ";
-    cin.ignore(); //skips the next character input
-    getline(cin, student.name); //basahon ang entire line
+    cin.ignore(); 
+    getline(cin, student.name); 
 
     cout << "Enter exam score: ";
     cin >> student.score;
 
     while (cin.fail() || student.score < 0 || student.score > 100) {
         cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << "Invalid score! Please input score between 0-100: ";
         cin >> student.score;
     }
 
     student.hasScore = true;
-    students.push_back(student); 
+    students.push_back(student);
+
     cout << "Score added successfully!\n";
+    // Display updated list of scores after adding a new one
+    displayScores(students);
 }
 
 void deleteScore(vector<Subject>& students) {
@@ -58,10 +73,9 @@ int main() {
         cout << "Choose an option: ";
         cin >> choice;
 
-        // Validate the input
         while (cin.fail() || choice < 1 || choice > 5) {
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); //clears input buffer until newline
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Invalid choice! Please enter a number between 1-5: ";
             cin >> choice;
         }
