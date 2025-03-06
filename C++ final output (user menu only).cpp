@@ -9,40 +9,40 @@ struct Subject {
     bool hasScore = false;
 };
 
-void addScore(vector<Subject>& scores) {
-    Subject score;
+void addScore(vector<Subject>& students) {
+    Subject student;
     cout << "Enter subject name: ";
-    cin.ignore(); 
-    getline(cin, score.name); 
+    cin.ignore(); //skips the next character input
+    getline(cin, student.name); //basahon ang entire line
 
     cout << "Enter exam score: ";
-    cin >> score.score;
+    cin >> student.score;
 
-    while (cin.fail() || score.score < 0 || score.score > 100) {
+    while (cin.fail() || student.score < 0 || student.score > 100) {
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
         cout << "Invalid score! Please input score between 0-100: ";
-        cin >> score.score;
+        cin >> student.score;
     }
 
-    scores.hasScore = true;
-    students.push_back(student); //adds a subject to the list
+    student.hasScore = true;
+    students.push_back(student); 
     cout << "Score added successfully!\n";
 }
 
-void deleteScore(vector<Subject>& scores) {
+void deleteScore(vector<Subject>& students) {
     cout << "Delete Exam Score\n";
 }
 
-void viewScores(const vector<Subject>& scores) {
+void viewScores(const vector<Subject>& students) {
     cout << "View Exam Scores\n";
 }
 
-void searchScore(const vector<Subject>& scores) {
+void searchScore(const vector<Subject>& students) {
     cout << "Search Exam Score\n";
 }
 int main() {
-    vector<Subject> score;
+    vector<Subject> students;
     int choice;
 
     do {
@@ -68,16 +68,16 @@ int main() {
 
         switch (choice) {
             case 1:
-                addScore(score);
+                addScore(students);
                 break;
             case 2:
-                deleteScore(score);
+                deleteScore(students);
                 break;
             case 3:
-                viewScores(score);
+                viewScores(students);
                 break;
             case 4:
-            	searchScore(score);
+            	searchScore(students);
             	break;
             case 5:
                 cout << "Thank you for using the program!\n";

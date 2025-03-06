@@ -79,13 +79,10 @@ void viewScores(const vector<Subject>& students) {
 void searchScores(vector<Subject>& students) {
     if (students.empty()) {
         cout << "Cannot be found.\n";
-        return;
+        return; 
     }
-
-    // Clear input buffer before reading the subject name
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     
-    // Get the subject name to search for
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     string searchName;
     cout << "Enter the subject name you want to search for: ";
     getline(cin, searchName);
@@ -104,11 +101,11 @@ void searchScores(vector<Subject>& students) {
     }
 
     if (!found) {
-        cout << "No results found for the subject: " << searchName << "\n";
+        cout << "Cannot be found.\n";
     }
-
     cout << "==============================================\n";
 }
+
 
 int main() {
     vector<Subject> students;
@@ -130,7 +127,7 @@ int main() {
         while (cin.fail() || choice < 1 || choice > 5) {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); //clears input buffer until newline
-            cout << "Invalid choice! Please enter a number between 1 and 4: ";
+            cout << "Invalid choice! Please enter a number between 1 and 5: ";
             cin >> choice;
         }
 
@@ -151,7 +148,7 @@ int main() {
                 cout << "Thank you for using the program!\n";
                 break;
         }
-    } while (choice != 4);
+    } while (choice != 5);
 
     return 0;
 }
