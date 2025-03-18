@@ -1,35 +1,55 @@
 #include <iostream>
 #include <limits>
 #include <vector>
-#include <iomanip> 
-
 using namespace std;
 
 struct Subject {
     string name;
-    double score;
+    int score;
     bool hasScore = false;
 };
+
+void displayScores(const vector<Subject>& students) {
+    cout << "\nUpdated List of Scores:\n";
+    cout << "------------------------------------------------\n";
+    cout << "| Subject Name        | Score |\n";
+    cout << "------------------------------------------------\n";
+    for (const auto& student : students) {
+        cout << "| " << student.name;
+        cout << string(20 - student.name.length(), ' ') << "| " << student.score << " |\n";
+    }
+    cout << "------------------------------------------------\n";
+}
 
 void addScore(vector<Subject>& students) {
     Subject student;
     cout << "Enter subject name: ";
-    cin.ignore(); //skips the next character input
-    getline(cin, student.name); //basahon ang entire line
+    cin.ignore(); 
+    getline(cin, student.name); 
+
+    // Check if the subject already exists
+    for (const auto& existingStudent : students) {
+        if (existingStudent.name == student.name) {
+            cout << "Subject " << student.name << " already exists. You can't enter it again.\n";
+            return; // Exit the function, don't add the score
+        }
+    }
 
     cout << "Enter exam score: ";
     cin >> student.score;
 
     while (cin.fail() || student.score < 0 || student.score > 100) {
         cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << "Invalid score! Please input score between 0-100: ";
         cin >> student.score;
     }
 
     student.hasScore = true;
-    students.push_back(student); 
+    students.push_back(student);
+
     cout << "Score added successfully!\n";
+    displayScores(students);
 }
 
 void deleteScore(vector<Subject>& students) {
@@ -44,81 +64,79 @@ void deleteScore(vector<Subject>& students) {
     getline(cin, name);
 
     bool found = false;
-    for (auto& student : students) {
-        if (student.name == name && student.hasScore) {
-            student.score = 0;
-            student.hasScore = false;
+    for (auto it = students.begin(); it != students.end(); ++it) {
+        if (it->name == name) {
+            students.erase(it);  // Erase the subject from the vector
             found = true;
-            cout << "Score for " << name << " deleted successfully.\n";
+            cout << "Subject " << name << " deleted successfully.\n";
             break;
         }
     }
 
     if (!found) {
         cout << "No score found for " << name << ".\n";
+    } else {
+        displayScores(students);
     }
 }
 
 void viewScores(const vector<Subject>& students) {
+    cout << "View Exam Scores\n"; 
+
     if (students.empty()) {
-        cout << "No scores recorded yet.\n";
+        cout << "No scores available.\n";
         return;
     }
 
-    cout << "\n========================================= SCORE TABLE =========================================\n";
-    cout << left << setw(20) << "Subject Name" << "| " << setw(10) << "Score\n";
-    cout << "--------------------------------------------\n";
+    int highestScore = -1;
+    int lowestScore = 101;
+    string highestSubject;
+    string lowestSubject;
+
     for (const auto& student : students) {
         if (student.hasScore) {
-            cout << left << setw(20) << student.name << "| " << setw(10) << student.score << endl; //ika run kay formal ang output
-        }
-    }
-    cout << "==============================================\n";
-}
-
-void searchScores(vector<Subject>& students) {
-    if (students.empty()) {
-        cout << "Cannot be found.\n";
-        return; 
-    }
-    
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    string searchName;
-    cout << "Enter the subject name you want to search for: ";
-    getline(cin, searchName);
-
-    bool found = false;
-
-    cout << "\n========================================= SCORE TABLE =========================================\n";
-    cout << left << setw(20) << "Subject Name" << "| " << setw(10) << "Score\n";
-    cout << "--------------------------------------------\n";
-
-    for (const auto& student : students) {
-        if (student.name == searchName && student.hasScore) {
-            cout << left << setw(20) << student.name << "| " << setw(10) << student.score << endl;
-            found = true;
+            if (student.score > highestScore) {
+                highestScore = student.score;
+                highestSubject = student.name;
+            }
+            if (student.score < lowestScore) {
+                lowestScore = student.score;
+                lowestSubject = student.name;
+            }
         }
     }
 
-    if (!found) {
-        cout << "Cannot be found.\n";
+    cout << "Highest score: " << highestSubject << " with " << highestScore << "\n\n";
+    cout << "Lowest score: " << lowestSubject << " with " << lowestScore << "\n";
+
+    if (lowestScore < 30) {
+        cout << "Study Tip: Focus on basics, ask for help, and practice regularly.\n";
+    } else if (lowestScore < 50) {
+        cout << "Study Tip: Review weak areas, practice more, and stay organized.\n";
+    } else {
+        cout << "Study Tip: Keep practicing, challenge yourself, and stay confident.\n";
     }
-    cout << "==============================================\n";
 }
 
+void searchScore(const vector<Subject>& students) {
+    cout << "Search Exam Score\n";
+}
 
 int main() {
     vector<Subject> students;
     int choice;
 
+    // Display the introductory message only once
+    cout << "                                EXAM PERFORMANCE ANALYZER & TRACKER";
+    cout << "\n===============================================================================================\n";
+    cout << "\n";
+
     do {
-        cout << "                               EXAM PERFORMANCE ANALYZER & TRACKER";
-        cout << "\n===============================================================================================\n";
-        cout << "\n";
+    	cout << "\n";
         cout << "1. Add Score\n";
         cout << "2. Delete Score\n";
         cout << "3. View Scores\n";
-        cout << "4. Search Subject\n";
+        cout << "4. Search Score\n";
         cout << "5. Exit\n";
         cout << "\n===============================================================================================\n";
         cout << "Choose an option: ";
@@ -126,8 +144,8 @@ int main() {
 
         while (cin.fail() || choice < 1 || choice > 5) {
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); //clears input buffer until newline
-            cout << "Invalid choice! Please enter a number between 1 and 5: ";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid choice! Please enter a number between 1-5: ";
             cin >> choice;
         }
 
@@ -142,12 +160,24 @@ int main() {
                 viewScores(students);
                 break;
             case 4:
-            	searchScores(students);
-            	break;
+                searchScore(students);
+                break;
             case 5:
                 cout << "Thank you for using the program!\n";
                 break;
         }
+
+        if (choice != 5) {
+            char continueChoice;
+            cout << "\nDo you want to perform another action? (y/n): ";
+            cin >> continueChoice;
+
+            // If the user answers 'n' or something else, exit the loop
+            if (continueChoice == 'n' || continueChoice == 'N') {
+                choice = 5;  // Set choice to 5 to break out of the loop
+            }
+        }
+
     } while (choice != 5);
 
     return 0;
